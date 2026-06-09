@@ -1,5 +1,43 @@
 ---
-title: "final"
-format: html
+title: "Final"
+author: "Cassidy Thorpe"
+format: pdf
+  execute:
+    message: false
+    warning: false
 ---
 
+# Set up
+
+```{r}
+#| label: packages
+
+# load in packages
+library(tidyverse)
+library(here)
+```
+
+```{r}
+#| label: data
+
+# load in data
+nest <- read_csv(here("data","nest_data_final.csv"))
+```
+
+# Problem 1. Research writing
+
+## a. Transparent statistical methods
+
+In part 1, they used a logistic regression. In part 2, they used a chi-square test. 
+
+## b. Suggestions for rewriting
+
+**Part 1:** These results indicate that the distance to the water's edge has an influence on whether on not the American Avocets will use a microhabitat. 
+
+**Part 2:** These results indicate that different species of birds such as the American Avocet, Forester's Tern, and Black-necked Stilt favor different habitat types.
+
+## c. Further analysis
+
+Another variable mentioned in the paper is the American Avocet's access to islands for breeding and roosting and how far away the nesting island is. The distance to the nesting island is a continuous variable, measured in meters, and it was found that the Avocets were on average, 131 meters closer to the nesting island than expected. Access to these island is important for the rest and reproduction of American Avocets. If the birds are closer to the islands, they may choose to occupy that microhabitat over their other options since they seem to like them.
+
+Problem 2. Data analysis
