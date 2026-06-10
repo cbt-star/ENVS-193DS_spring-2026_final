@@ -1,25 +1,23 @@
 ---
 title: "Final"
 author: "Cassidy Thorpe"
+date: "06-09-2026"
 format: pdf
-  execute:
-    message: false
-    warning: false
+execute:
+  message: false
+  warning: false
 ---
 
 # Set up
 
 ```{r}
-#| label: packages
+#| label: set-up
 
 # load in packages
 library(tidyverse)
 library(here)
-```
-
-```{r}
-#| label: data
-
+library(janitor)
+library(knitr)
 # load in data
 nest <- read_csv(here("data","nest_data_final.csv"))
 ```
@@ -41,3 +39,66 @@ In part 1, they used a logistic regression. In part 2, they used a chi-square te
 Another variable mentioned in the paper is the American Avocet's access to islands for breeding and roosting and how far away the nesting island is. The distance to the nesting island is a continuous variable, measured in meters, and it was found that the Avocets were on average, 131 meters closer to the nesting island than expected. Access to these island is important for the rest and reproduction of American Avocets. If the birds are closer to the islands, they may choose to occupy that microhabitat over their other options since they seem to like them.
 
 Problem 2. Data analysis
+
+## a. Clean and wrangle
+
+```{r}
+
+# create new object from nest
+nests_clean <- nest |> 
+  # select columns of interest (the columns I want to answer the research 
+  # question are height, ant species, nest occurrence)
+  select(height_cm, ant_species, case_control) |> 
+  # filter for specific species
+  filter(ant_species %in% c("AB", "RRB", "BBR")) |> 
+  # 
+  mutate(
+    # reorder the ant species
+    ant_species = fct_relevel(ant_species, "AB", "RRB", "BBR"),
+    # add a column for the scientific names
+    scientific_name = recode_values(ant_species,
+                                    "AB"  ~ "Crematogaster sjostedti",
+                                    "RRB" ~ "Crematogaster mimosae",
+                                    "BBR" ~ "Crematogaster nigriceps"))
+# display structure of data frame
+glimpse(nests_clean)
+# display 10 random rows
+nests_clean |> 
+  slice_sample(n = 10) 
+```
+
+## b. Response variable
+
+The 1s mean that the tree contained a nest and the 0s mean that the tree did not contain a nest.
+
+## c. Purpose of the study
+
+**Tree height:** Tree height is a continuous variable because a tree can be any height measurement. As tree height increases, the probability of nest occurrence could increase because taller trees that are older may have thicker branches and more space to nest. This information is based on what I read in the results section in paragraphs 1 and 2 as well as the discussion section in paragraphs 1 and 2.
+
+**Acacia ant species:** Acacia ant species is a categorical variable because it groups the trees by ant symbiont species. The tree with the more aggressive species of ants had a higher probability of having a bird nest because the ants are more likely to deter predators that might want to climb the tree to get to the bird nest. This is based on information I read in the results section in paragraphs 1 and 2. 
+
+## d. Table of models
+
+| Model number | Tree height | Ant species | Interaction (Height × Species) | Predictor list |
+| :---: | :---: | :---: | :---: | :---------- |
+| 1 | X | X | | tree height and ant species |
+| 2 | X | X | X | tree height, ant species, and their interaction |
+
+## e. Run the models
+
+```{r}
+#| label: model fitting
+
+# model 1: without interaction
+model1 <- lm(
+  case_control ~ height_cm + ant_species,
+  data = nests_clean, 
+  family = binomial
+)
+
+# model 2: with interaction
+model2 <- lm(
+  case_control ~ height_cm * ant_species,
+  data = nests_clean, 
+  family = binomial)
+```
