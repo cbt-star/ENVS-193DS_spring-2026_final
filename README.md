@@ -16,4 +16,4 @@ There is a `code` folder in which all code is stored.
 
 # Rendered output
 
-The rendered .pdf from the assignment is [here](https://github.com/cbt-star/ENVS-193DS_spring-2026_final/blob/main/code/final.pd
+The rendered .pdf from the assignment is [here](https://github.com/cbt-star/ENVS-193DS_spring-2026_final/blob/main/code/final.pdf)
