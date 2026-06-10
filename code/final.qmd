@@ -17,7 +17,7 @@ execute:
 library(tidyverse)
 library(here)
 library(janitor)
-library(knitr)
+library(DHARMa)
 # load in data
 nest <- read_csv(here("data","nest_data_final.csv"))
 ```
@@ -90,15 +90,63 @@ The 1s mean that the tree contained a nest and the 0s mean that the tree did not
 #| label: model fitting
 
 # model 1: without interaction
-model1 <- lm(
+model1 <- glm(
   case_control ~ height_cm + ant_species,
   data = nests_clean, 
   family = binomial
 )
 
 # model 2: with interaction
-model2 <- lm(
+model2 <- glm(
   case_control ~ height_cm * ant_species,
   data = nests_clean, 
   family = binomial)
 ```
+
+## f. Select the best model
+
+```{r}
+
+# compare models
+AIC(model1, model2)
+```
+
+The best model was model 2, the model with the interaction. This model includes the tree height, acacia ant species, and the interaction between them. This tells us if the relationship between tree height and the probability of a nest changes based on the ant species. 
+
+## g. Check diagnostics
+
+```{r}
+#| label: dharma-diagnostics
+#| fig-width: 8
+#| fig-height: 4.5
+#| fig-align: center
+# simulate the residuals - use the selected model
+simulated_res <- simulateResiduals(fittedModel = model2, n = 250)
+# plot the diagnostic outputs
+plot(simulated_res)
+```
+
+- Residuals are normally distributed, the points follow the red line (QQ plot)
+- Residuals are homoscedastic, the points look random (DHARMa residuals vs. predicted)
+
+## h. Visualize model predictions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
