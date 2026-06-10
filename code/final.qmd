@@ -42,7 +42,7 @@ In part 1, they used a logistic regression. In part 2, they used a chi-square te
 
 Another variable mentioned in the paper is the American Avocet's access to islands for breeding and roosting and how far away the nesting island is. The distance to the nesting island is a continuous variable, measured in meters, and it was found that the Avocets were on average, 131 meters closer to the nesting island than expected. Access to these island is important for the rest and reproduction of American Avocets. If the birds are closer to the islands, they may choose to occupy that microhabitat over their other options since they seem to like them.
 
- # Problem 2. Data analysis
+# Problem 2. Data analysis
 
 ## a. Clean and wrangle
 
