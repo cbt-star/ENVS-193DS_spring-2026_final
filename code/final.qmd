@@ -40,7 +40,7 @@ In part 1, they used a logistic regression. In part 2, they used a chi-square te
 
 Another variable mentioned in the paper is the American Avocet's access to islands for breeding and roosting and how far away the nesting island is. The distance to the nesting island is a continuous variable, measured in meters, and it was found that the Avocets were on average, 131 meters closer to the nesting island than expected. Access to these island is important for the rest and reproduction of American Avocets. If the birds are closer to the islands, they may choose to occupy that microhabitat over their other options since they seem to like them.
 
-Problem 2. Data analysis
+ # Problem 2. Data analysis
 
 ## a. Clean and wrangle
 
@@ -136,7 +136,8 @@ plot(simulated_res)
 ```{r}
 #| label: plot-model-predictions
 
- # extract predicted probabilities along the range of tree heights for each ant species
+ # extract predicted probabilities along the range of tree heights for each
+ #  ant species
  # [all] means look at every measured height
 predictions <- ggpredict(model2, terms = c("height_cm [all]", "ant_species"))
 # write out ant names so they can be used on the plot
@@ -346,6 +347,16 @@ face = "bold"),
 plot.subtitle = element_text(hjust = 0.5))
 ```
 
+## e. Write a caption
+
+Figure 2. Relationship between daily meat consumption and the number of eggs eaten. As the
+number of daily meat servings increase, the number of eggs consumed decreases. Individual daily
+observations are represented by orange points. The red solid line indicated the ordinary least
+squares linear regression trend. The orange ribbon represents the 95% confidence interval.
+
+## f. Write about your results 
+
+A simple linear regression was conducted to determine if daily meat consumption significantly predicts daily egg consumption. The analysis revealed a significant negative relationship, where each additional serving of meat eaten per day predicted a decrease of [0.5741] eggs eaten (t = 3.399), p < 0.001). The magnitude of this effect was substantial, with meat consumption accounting for 22.41% of the total variance in daily egg consumption ($R^2$ = 0.2241).
 
 
 
