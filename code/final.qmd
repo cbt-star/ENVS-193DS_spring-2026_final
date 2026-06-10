@@ -2,7 +2,9 @@
 title: "Final"
 author: "Cassidy Thorpe"
 date: "06-09-2026"
-format: pdf
+format: 
+  pdf:
+    toc: true # use this to display a table of contents
 execute:
   message: false
   warning: false
