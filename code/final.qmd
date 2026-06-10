@@ -18,6 +18,7 @@ library(tidyverse)
 library(here)
 library(janitor)
 library(DHARMa)
+library(ggeffects)
 # load in data
 nest <- read_csv(here("data","nest_data_final.csv"))
 ```
@@ -131,6 +132,55 @@ plot(simulated_res)
 
 ## h. Visualize model predictions
 
+```{r}
+#| label: plot-model-predictions
+
+ # extract predicted probabilities along the range of tree heights for each ant species
+ # [all] means look at every measured height
+predictions <- ggpredict(model2, terms = c("height_cm [all]", "ant_species"))
+ant_names <- c(
+  "RRB"   = "Crematogaster mimosae",
+  "BBR" = "Crematogaster nigriceps",
+  "AB" = "Crematogaster sjostedti")
+# base layer: ggplot
+ggplot() +
+  geom_jitter(
+    data = nests_clean,
+    aes(x = height_cm, 
+        y = case_control, 
+        color = ant_species),
+    width = 0.1,
+    height = 0,
+    alpha = 0.3,
+    size = 0.9) +
+  geom_line(
+    data = predictions,
+    aes(x = x, 
+        y = predicted, 
+        color = group)) +
+  geom_ribbon(
+    data = predictions, 
+    aes(x = x,
+        ymin = conf.low,
+        ymax = conf.high,
+        fill = group), 
+    alpha = 0.2) +
+  facet_wrap(~ group,labeller = as_labeller(ant_names)) +
+  labs(
+    x = "Tree Height (cm)",
+    y = "Probability of Nest Occurrence",
+    title = "Tree Height Predicts the Probablity of Nest Occurence") +
+  scale_color_viridis_d() +
+  scale_fill_viridis_d() +
+  theme_bw() +
+  theme(
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(), 
+    legend.position = "none",           
+    strip.background = element_rect(fill = "grey95"))
+  
+```
+ 
 
 
 
