@@ -138,50 +138,112 @@ plot(simulated_res)
  # extract predicted probabilities along the range of tree heights for each ant species
  # [all] means look at every measured height
 predictions <- ggpredict(model2, terms = c("height_cm [all]", "ant_species"))
+# write out ant names so they can be used on the plot
 ant_names <- c(
   "RRB"   = "Crematogaster mimosae",
   "BBR" = "Crematogaster nigriceps",
   "AB" = "Crematogaster sjostedti")
 # base layer: ggplot
 ggplot() +
+  # 1st layer: geom_jitter to show the underlying data points
   geom_jitter(
+    # use clean data frame
     data = nests_clean,
+    # x-axis: tree height
     aes(x = height_cm, 
+        # y-axis: nest vs no nest
         y = case_control, 
+        # color by ant species
         color = ant_species),
+    # allow slight horizontal jitter
     width = 0.1,
+    # allow no vertical jitter
     height = 0,
+    # make points mmore transparent
     alpha = 0.3,
+    # make points smaller
     size = 0.9) +
+  # 2nd layer: geom_line to show model predictions
   geom_line(
+    # use predictions data frame
     data = predictions,
+    # x-axis: x values
     aes(x = x, 
+        # y-axis: predicted values for nest
         y = predicted, 
+        # color by ant species
         color = group)) +
+  # 3rd layer: geom_ribbon to show 95& confidence interval
   geom_ribbon(
+    # use predictions data frame
     data = predictions, 
+    # x-axis: x
     aes(x = x,
+        # ymin: lower bound 95% CI
         ymin = conf.low,
+        # yman: upper bound 95% CI
         ymax = conf.high,
+        # fill color by ant species
         fill = group), 
+    # make more transparent
     alpha = 0.2) +
+  # separate by ant species
   facet_wrap(~ group,labeller = as_labeller(ant_names)) +
+  # label axes and add title
   labs(
     x = "Tree Height (cm)",
     y = "Probability of Nest Occurrence",
     title = "Tree Height Predicts the Probablity of Nest Occurence") +
+  # change colors
   scale_color_viridis_d() +
   scale_fill_viridis_d() +
+  # change theme
   theme_bw() +
   theme(
+    # take out gridlines
     panel.grid.major = element_blank(), 
     panel.grid.minor = element_blank(), 
+    # take out legend
     legend.position = "none",           
+    # chhange fill background color
     strip.background = element_rect(fill = "grey95"))
   
 ```
  
+## i. Caption
 
+**Figure 1: Predicted probability of bird nest occurrence as a function of tree height across acacia ant host species.** Shaded ribbons indicate the 95% confidence intervals around the predicted probabilities (lines) calculated from the chosen generalized linear model (model 2) in which there was an interaction between tree height and ant species. Raw data points (jittered horizontally along the binary 0 and 1 outcomes) represent observed nest absences and presences sampled across varying tree heights. Data adapted from Palmer et al. (2017), available via the Dryad Digital Repository.
+
+## j. Calculate model predictions
+
+```{r}
+#| label: calculate
+
+# create new data frame for 600 cm
+prediction_600cm <- data.frame(
+  # define height
+  height_cm = c(600, 600, 600),
+  # for each species
+  ant_species = c("RRB", "BBR", "AB")
+)
+# calculate predicted probabilities using model2 and the new data frame
+predicted_probabilities <- predict(model2, 
+                                   newdata = prediction_600cm, 
+                                   # type = "response" converts the internal 
+                                   # log-odds into a 0-1 probability scale
+                                   type = "response")
+# create summary table
+results_table <- data.frame(prediction_600cm, 
+                            Predicted_Probability = predicted_probabilities)
+# show table
+print(results_table)
+```
+
+## k. Interpret results 
+
+Based on the model 2, tree height and acacia ant species are both critical predictors determining the probability of bird nest occurrence. As visualized in Figure 1, there is a strong, positive relationship between tree height and nest occupancy, though the initial probability is different depending on the ant species that lives in the tree. For the tall trees (at 600 cm), the model predicts a high probability of nest occupancy when hosted by Crematogaster nigriceps (close to 100%) and a high probability within Crematogaster mimosae trees (74%), whereas the probability of a nest in trees occupied by Crematogaster sjostedti is low (20%). Biologically, these trends could be explained by variations in ant behavior and host-tree modification: C. nigriceps aggressively prunes canopy buds to reduce visibility and structural access for predators, which adds protection for nest occupants. Both C. mimosae and C. nigriceps strongly defend their territories against elephants, which protects the tree and reduces distrubances for nesters. Whereas  C. sjostedti participates in wood boring behaviors that can degrade the tree, and make it a less secure nesting site for birds.
+
+# Problem 3. 
 
 
 
